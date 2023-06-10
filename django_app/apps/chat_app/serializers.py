@@ -15,7 +15,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         model = ChatRoom
         fields = ['name', 'members']
         
-
 class MessageSerializer(serializers.ModelSerializer):
         user = UserSerializer()
         class Meta:
