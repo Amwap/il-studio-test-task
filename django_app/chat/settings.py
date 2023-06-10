@@ -44,7 +44,12 @@ INSTALLED_APPS = [
     'apps.chat_app',
 ]
 
-ASGI_APPLICATION = 'chat.asgi.application'
+ASGI_APPLICATION = 'chat.routing.application'
+CHANNEL_LAYERS = {
+'default': {
+    'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -39,31 +39,26 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  react_app:
-    build:
-      context: ./react_app
-      dockerfile: Dockerfile.dev
-    container_name: chat_react_dev
-    command: sh -c "printenv | grep NUXT_ > .env && npm run dev"
-    env_file:
-      - ./.env.dev
-    volumes:
-      - ./react_app/components/:/usr/src/react_app/components/
-      - ./react_app/pages/:/usr/src/react_app/pages/
-      - ./react_app/static/:/usr/src/react_app/static/
-      - ./react_app/mixins/:/usr/src/react_app/mixins/
-      - ./react_app/react.config.js/:/usr/src/react_app/react.config.js
-      # - node_modules:/usr/src/react_app/node_modules/
-    ports:
-      - 3000:3000
-    expose:
-      - 3000
-    depends_on:
-      - django_app
-    restart: always
-    tty: true
-    networks:
-      - juliadress-network
+  # react_app:
+  #   build:
+  #     context: ./react_app
+  #     dockerfile: Dockerfile.dev
+  #   container_name: chat_react_dev
+  #   command: sh -c "printenv | grep REACT_APP_ > .env && npm start"
+  #   env_file:
+  #     - ./.env.dev
+  #   # volumes:
+
+  #   ports:
+  #     - 3000:3000
+  #   expose:
+  #     - 3000
+  #   depends_on:
+  #     - django_app
+  #   restart: always
+  #   tty: true
+  #   networks:
+  #     - chat-network
 
 volumes:
   postgres_data:

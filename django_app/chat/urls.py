@@ -21,5 +21,5 @@ from chat import routing
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.chat_app.urls')),
-    path('ws/', include(routing.websocket_urlpatterns)),
+    path('', include(routing.websocket_urlpatterns)),
 ]
