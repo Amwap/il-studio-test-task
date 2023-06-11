@@ -17,9 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from chat import routing
+from django.contrib import admin
+from django.urls import path, include
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('apps.chat_app.urls')),
+    path('api/v1/', include('apps.chat_app.urls')),
+    path('api/v1/', include('apps.auth_app.urls')),
     path('', include(routing.websocket_urlpatterns)),
 ]
