@@ -15,6 +15,7 @@ class ChatRoom(models.Model):
 
 class Message(models.Model):
     user = models.ForeignKey(User, verbose_name=_("Пользователь"), on_delete=models.CASCADE)
+    room = models.ForeignKey(ChatRoom, verbose_name=_("Чат комната"), on_delete=models.CASCADE)
     content = models.TextField(verbose_name=_("Текст сообщения"))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("Время"))
 
