@@ -11,9 +11,5 @@ RUN apk add git
 
 # copy the app, note .dockerignore
 COPY . /home/react_app/
-RUN npm install --force
+RUN npm install 
 # RUN npm run build
-
-EXPOSE 3000
-
-CMD [ "npm", "start" ]
