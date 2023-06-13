@@ -59,10 +59,7 @@ class Chat extends Component {
                 this.setState((state) => ({
                     message_list: [
                         ...state.message_list,
-                        {
-                            content: dataFromServer.text,
-                            user: dataFromServer.user,
-                        },
+                        dataFromServer.message,
                     ],
                 }));
             }

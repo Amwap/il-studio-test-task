@@ -61,7 +61,7 @@ class TextRoomConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'text': text,
+                'message':  MessageSerializer(message).data,
                 'user': UserSerializer(user).data
             }
         )
