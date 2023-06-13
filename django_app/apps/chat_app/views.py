@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class RoomListView(generics.ListAPIView):
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
     queryset = ChatRoom.objects.all() 
     serializer_class = ChatRoomSerializer
     

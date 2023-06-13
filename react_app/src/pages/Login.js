@@ -5,21 +5,26 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
 import { setAuthToken } from "../helpers/setAuthToken"
+import { history } from '../helpers/history';
+
 
 function Login() {
-    const handleSubmit = (email, password) => {
+    const handleSubmit = (username, password) => {
         //reqres registered sample user
         const loginPayload = {
-            email: 'eve.holt@reqres.in',
-            password: 'cityslicka'
+            username: 'admin',
+            password: 'admin_forever'
         }
-
         axios.post(`${process.env.REACT_APP_API_URL}/api/v1/token/`, loginPayload)
-            .then(response => {
-                const token = response.data.token;
-                localStorage.setItem("token", token);
-                setAuthToken(token);
-                window.location.href = '/'
+            .then(response => { 
+                const access = response.data.access;
+                const refresh = response.data.refresh;
+                localStorage.setItem("refresh", refresh);
+                localStorage.setItem("access", access);
+                setAuthToken(access);
+                // redirect('/chatlist')
+                // <Redirect to='/chatlist' />
+                history.push('/chatlist')
             })
             .catch(err => console.log(err));
     }
@@ -32,13 +37,12 @@ function Login() {
                         className='col-12'
                         onSubmit={(event) => {
                             event.preventDefault()
-                            const [email, password] = event.target.children;
-                            handleSubmit(email, password);
+                            const [username, password] = event.target.children;
+                            handleSubmit(username, password);
                         }}
                     >
-
                         <InputGroup className="mb-3">
-                            <Form.Control placeholder="Логин" name="email"/>
+                            <Form.Control placeholder="Логин" name="username"/>
                         </InputGroup>
                         <InputGroup className="mb-3">
                             <Form.Control placeholder="Пароль" name="password" type='password'/>

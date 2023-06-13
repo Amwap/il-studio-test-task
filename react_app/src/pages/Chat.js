@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Container from "@material-ui/core/Container";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import Paper from "@material-ui/core/Paper";
-import { withStyles } from "@material-ui/core/styles";
 
-const useStyles = (theme) => ({
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-});
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import ExitButton from '../components/exitButton'
+import { Send } from 'react-bootstrap-icons';
 
 class Chat extends Component {
     state = {
@@ -21,9 +13,9 @@ class Chat extends Component {
         messages: [],
         value: '',
         name: '',
-        room: 'test',
+        room: this.props.match.params.slug,
     }
-    client = new W3CWebSocket('ws://127.0.0.1:8004/ws/' + this.state.room + '/'); //gets room_name from the state and connects to the backend server 
+    client = new W3CWebSocket('ws://127.0.0.1:8000/ws/' + this.state.room + '/'); //gets room_name from the state and connects to the backend server 
     onButtonClicked = (e) => {
         this.client.send(
             JSON.stringify({
@@ -57,82 +49,109 @@ class Chat extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Container component="main" maxWidth="xs">
-                {this.state.filledForm ? (
-                    <div style={{ marginTop: 50 }}>
-                        Room Name: {this.state.room}
-                        <Paper
-                            style={{ height: 500, maxHeight: 500, overflow: "auto", boxShadow: "none", }}
-                        >
-                            {this.state.messages.map((message) => (
-                                <>
-                                    <Card className={classes.root}>
-                                        <CardHeader title={message.name} subheader={message.msg} />
-                                    </Card>
-                                </>
-                            ))}
-                        </Paper>
-                        <form
-                            className={classes.form}
-                            noValidate
-                            onSubmit={this.onButtonClicked}
-                        >
-                            <TextField id="outlined-helperText" label="Write text" defaultValue="Default Value"
-                                variant="outlined"
-                                value={this.state.value}
-                                fullWidth
-                                onChange={(e) => {
-                                    this.setState({ value: e.target.value });
-                                    this.value = this.state.value;
-                                }}
-                            />
-                            <Button type="submit" fullWidth variant="contained" color="primary"
-                                className={classes.submit}
-                            >
-                                Send Message
-                            </Button>
-                        </form>
-                    </div>
-                ) : (
-                    <div>
-                        <CssBaseline />
-                        <div className={classes.paper}>
-                            <form
-                                className={classes.form}
-                                noValidate
-                                onSubmit={(value) => this.setState({ filledForm: true })}
-                            >
-                                <TextField variant="outlined" margin="normal" required fullWidth label="Room name"
-                                    name="Room name"
-                                    autoFocus
-                                    value={this.state.room}
-                                    onChange={(e) => {
-                                        this.setState({ room: e.target.value });
-                                        this.value = this.state.room;
-                                    }}
-                                />
-                                <TextField variant="outlined" margin="normal" required fullWidth name="sender" label="sender"
-                                    type="sender"
-                                    id="sender"
-                                    value={this.state.name}
-                                    onChange={(e) => {
-                                        this.setState({ name: e.target.value });
-                                        this.value = this.state.name;
-                                    }}
-                                />
-                                <Button type="submit" fullWidth variant="contained" color="primary"
-                                    className={classes.submit}
-                                >
-                                    Submit
-                                </Button>
-                            </form>
+            <div id="base-layout" className='chat-layout'>
+                <Card className='col-6 rounded-0'>
+                    <Card.Header style={{ fontSize: "26px", backgroundColor: 'white' }} className="d-flex justify-content-between align-items-center">
+                        <div></div>
+                        <div className='d-flex flex-column'>
+                            <div style={{ fontSize: '22px', fontWeight: '600' }}>Название</div>
+                            <div style={{ fontSize: '15px' }}>2 участника</div>
                         </div>
-                    </div>
-                )}
-            </Container>
+                        <ExitButton />
+
+                    </Card.Header>
+                    <Card.Body className="d-flex flex-column align-items-center">
+
+                    </Card.Body>
+                    <Card.Footer >
+                        <form
+                            className='d-flex flex-row justify-content-between align-items-center'
+                        >
+                            <Form.Control placeholder="Сообщение..." name='name' style={{ border: 'white', borderRadius: '0px' }} />
+                            <button type='submit' className='btn-no-style'>
+                                <Send style={{ transform: 'rotate(45deg)', cursor: 'pointer' }} />
+                            </button>
+                        </form>
+                    </Card.Footer>
+                </Card>
+            </div>
+
+            // <Container component="main" maxWidth="xs">
+            //     {this.state.filledForm ? (
+            //         <div style={{ marginTop: 50 }}>
+            //             Room Name: {this.state.room}
+            //             <Paper
+            //                 style={{ height: 500, maxHeight: 500, overflow: "auto", boxShadow: "none", }}
+            //             >
+            //                 {this.state.messages.map((message) => (
+            //                     <>
+            //                         <Card className={classes.root}>
+            //                             <CardHeader title={message.name} subheader={message.msg} />
+            //                         </Card>
+            //                     </>
+            //                 ))}
+            //             </Paper>
+            //             <form
+            //                 className={classes.form}
+            //                 noValidate
+            //                 onSubmit={this.onButtonClicked}
+            //             >
+            //                 <TextField id="outlined-helperText" label="Write text" defaultValue="Default Value"
+            //                     variant="outlined"
+            //                     value={this.state.value}
+            //                     fullWidth
+            //                     onChange={(e) => {
+            //                         this.setState({ value: e.target.value });
+            //                         this.value = this.state.value;
+            //                     }}
+            //                 />
+            //                 <Button type="submit" fullWidth variant="contained" color="primary"
+            //                     className={classes.submit}
+            //                 >
+            //                     Send Message
+            //                 </Button>
+            //             </form>
+            //         </div>
+            //     ) : (
+            //         <div>
+            //             <CssBaseline />
+            //             <div className={classes.paper}>
+            //                 <form
+            //                     className={classes.form}
+            //                     noValidate
+            //                     onSubmit={(value) => this.setState({ filledForm: true })}
+            //                 >
+            //                     <TextField variant="outlined" margin="normal" required fullWidth label="Room name"
+            //                         name="Room name"
+            //                         autoFocus
+            //                         value={this.state.room}
+            //                         onChange={(e) => {
+            //                             this.setState({ room: e.target.value });
+            //                             this.value = this.state.room;
+            //                         }}
+            //                     />
+            //                     <TextField variant="outlined" margin="normal" required fullWidth name="sender" label="sender"
+            //                         type="sender"
+            //                         id="sender"
+            //                         value={this.state.name}
+            //                         onChange={(e) => {
+            //                             this.setState({ name: e.target.value });
+            //                             this.value = this.state.name;
+            //                         }}
+            //                     />
+            //                     <Button type="submit" fullWidth variant="contained" color="primary"
+            //                         className={classes.submit}
+            //                     >
+            //                         Submit
+            //                     </Button>
+            //                 </form>
+            //             </div>
+            //         </div>
+            //     )}
+            // </Container>
         );
     }
 }
 
 // export default Chat;
-export default withStyles(useStyles)(Chat);
+export default Chat;

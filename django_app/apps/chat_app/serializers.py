@@ -6,13 +6,13 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['id', 'username']
     
 
 class ChatRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatRoom
-        fields = ['name']
+        fields = ['id', 'name']
 
 
 class MessageSerializer(serializers.ModelSerializer):

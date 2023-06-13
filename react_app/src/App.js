@@ -7,7 +7,7 @@ import {setAuthToken} from './helpers/setAuthToken'
 function App() {
 
   //check jwt token
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access");
   if (token) {
       setAuthToken(token); 
   }

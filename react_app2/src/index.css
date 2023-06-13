@@ -1,9 +1,6 @@
-/* #root,
-
-#chatlist-layout,
-#chat-layout, */
+#root,
 #login-layout,
-#base-layout,
+#chatlist-layout,
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -52,38 +49,4 @@ code {
 
 input{
   outline: none!important
-}
-
-.chat-layout>.card{
-  height:100vh;
-}
-.card-footer,
-.card-header{
-  background-color: white!important;
-}
-
-/* .input-no-style{
-  border-color: white!important;
-  border-radius: 0px!important;
-  outline: none!important;
-}
-
-.input-no-style,
-.input-no-style:active, 
-.input-no-style:hover, 
-.input-no-style:after, 
-.input-no-style:before, 
-.input-no-style:focus {
-  outline: 0!important;
-  outline-offset: 0!important;
-  border-color: white!important;
-  border-radius: 0px!important;
-  border: 0!important;
-} */
-
-.btn-no-style{
-  border: none; 
-  outline: none;
-  background-color: white;
-  
 }

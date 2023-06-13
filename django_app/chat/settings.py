@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4wo)*dh#h4+()le_ud#0t=os^ni9@k!-03vo3rkp%yk!t3u-qq'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DJANGO_DEBUG"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] #os.environ.get("DJANGO_ALLOWED_HOSTS").split()
 
 
 # Application definition
@@ -48,7 +48,38 @@ INSTALLED_APPS = [
     'apps.auth_app',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+    'http://0.0.0.0:3000',
+    'http://localhost:8000',
+    'http://localhost:8004',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8004',
+    'http://127.0.0.1:3000',
+    'http://0.0.0.0:3000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8004',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8004',
+)
+CORS_ALLOWED_ORIGINS = (
+    'http://localhost:3000',
+    'http://0.0.0.0:3000',
+    'http://localhost:8000',
+    'http://localhost:8004',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8004',
+    'http://127.0.0.1:3000',
+    'http://0.0.0.0:3000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8004',
+    'http://0.0.0.0:8000',
+    'http://0.0.0.0:8004',
+)
+
+APPEND_SLASH = True
 
 ASGI_APPLICATION = 'chat.routing.application'
 CHANNEL_LAYERS = {
@@ -64,21 +95,22 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
      'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
      'ROTATE_REFRESH_TOKENS': True,
      'BLACKLIST_AFTER_ROTATION': True
 }
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'chat.urls'
