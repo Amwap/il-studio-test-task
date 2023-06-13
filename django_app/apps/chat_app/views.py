@@ -8,7 +8,6 @@ from rest_framework.response import Response
 
 
 
-
 class UserView(APIView):
     permission_classes = (IsAuthenticated, )
     def get(self, request):
@@ -29,7 +28,17 @@ class RoomListView(generics.ListAPIView):
     
     
 class RoomCreateView(generics.CreateAPIView):
-    # permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated, )
     queryset = ChatRoom.objects.all() 
     serializer_class = ChatRoomSerializer
+    
+    
+class MessageListView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = MessageSerializer
+    
+    def get_queryset(self):
+        queryset = Message.objects.filter(room__id=self.room_id) 
+        return queryset
+    
     

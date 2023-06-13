@@ -57,6 +57,11 @@ input{
 .chat-layout>.card{
   height:100vh;
 }
+
+.chat-body{
+  overflow-y: scroll;
+}
+
 .card-footer,
 .card-header{
   background-color: white!important;
@@ -85,5 +90,41 @@ input{
   border: none; 
   outline: none;
   background-color: white;
+  
+}
+
+.chatlist-navbar{
+  position: absolute;
+  display: fixed;
+  top: 0px;
+  width: 100%;
+  font-size: 30px;
+}
+
+.msg-rectangle{
+  max-width: 75%;
+  min-width: 100px;
+  background-color: #F2F2F7;
+  padding: 4px 8px 4px 6px;
+  border-radius: 0px 6px 6px 6px;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-align: start;
+  /* background: radial-gradient(60px at bottom left, transparent 49%, #F2F2F7 51%) no-repeat right bottom; */
+}
+.left-angle{
+
+}
+.rigth-angle{
+
+}
+
+.msg-rectangle>p{
+  margin: 0px;
+}
+
+.msg-time{
+  font-size: 12px;
+  color: #666668;
   
 }

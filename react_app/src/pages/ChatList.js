@@ -6,14 +6,14 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from "axios";
 import { ArrowRightCircle } from 'react-bootstrap-icons';
+import ExitButton from '../components/ExitButton';
+
 
 function ChatList() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-
         getChatList();
-
     }, []);
 
     const getChatList = () => {
@@ -40,7 +40,12 @@ function ChatList() {
             .catch(err => console.log(err));
     }
     return (
-        <div id="base-layout">
+        <div id="base-layout" className='d-flex flex-column '>
+            <nav className='chatlist-navbar d-flex justify-content-center align-items-center'>
+                <div className='col-md-4 d-flex flex-row justify-content-end pt-3'>
+                    <ExitButton className='ml-auto' style={{ fontSize: '50px' }} />
+                </div>
+            </nav>
             <Card className="col-md-4 text-nowrap" style={{ minWidth: '320px' }}>
                 <Card.Header style={{ fontSize: "26px", backgroundColor: 'white' }} className="d-flex justify-content-center">Выберите / создайте чат</Card.Header>
                 <Card.Body className="d-flex flex-column align-items-center">
@@ -65,7 +70,7 @@ function ChatList() {
                                 handleSubmit(name);
                             }}
                         >
-                            <Form.Control placeholder="Введите название чата" name='name' style={{ border: 'white' } }/>
+                            <Form.Control placeholder="Введите название чата" name='name' style={{ border: 'white' }} />
                             <Button variant="primary" type='submit' style={{ width: '102px', height: '38px' }} className="m-1">Создать</Button>
                         </form>
                     </InputGroup>

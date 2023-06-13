@@ -3,64 +3,76 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import ExitButton from '../components/exitButton'
+import BackButton from '../components/BackButton'
 import { Send } from 'react-bootstrap-icons';
 import axios from "axios";
-
+import MessageLeft from '../components/MessageLeft';
+import MessageRight from '../components/MessageRight';
 
 class Chat extends Component {
     state = {
         filledForm: false,
-        messages: [],
+        message_list: [],
         value: '',
-        sender: JSON.parse(localStorage.getItem('user')),
+        user: JSON.parse(localStorage.getItem('user')),
         room_id: this.props.match.params.room_id,
         room_meta: {}
     }
-    // getRoomMeta = () => {
-    //     axios.get(`${process.env.REACT_APP_API_URL}/api/v1/room/meta/` + this.state.room_id + '/')
-    //         .then(response => {
-    //             console.log(response.data)
-    //             this.state.room_meta = response.data
-    //         })
-    //         .catch(err => console.log(err));
-    // }
-
-    client = new W3CWebSocket('ws://127.0.0.1:8000/ws/' + this.state.room_id + '/'); //gets room_name from the state and connects to the backend server 
+    getRoomMeta = () => {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/v1/message/list/` + this.state.room_id + '/')
+            .then(response => {
+                console.log(response.data)
+                this.state.room_meta = response.data
+            })
+            .catch(err => console.log(err));
+    }
+    client = new W3CWebSocket('ws://127.0.0.1:8000/ws/chatroom/' + this.state.room_id + '/'); //gets room_name from the state and connects to the backend server 
     onButtonClicked = (e) => {
         this.client.send(
             JSON.stringify({
                 type: "message",
                 text: this.state.value,
-                sender: this.state.sender,
+                user: this.state.user,
             })
         );
         this.state.value = "";
         e.preventDefault();
     };
+    scrollToBottom = () => {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    }
+
     componentDidMount() {
         this.client.onopen = () => {
             console.log("WebSocket Client Connected");
         };
         this.client.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
-            if (dataFromServer.type === 'page_meta') {
+            console.log(dataFromServer)
+            if (dataFromServer.type === 'room_meta') {
                 this.setState((state) => ({
-                    room_meta: dataFromServer
+                    room_meta: dataFromServer.room_meta,
+                    message_list: dataFromServer.message_list
+
                 }));
             } else if (dataFromServer.type === 'chat_message') {
                 this.setState((state) => ({
-                    messages: [
-                        ...state.messages,
+                    message_list: [
+                        ...state.message_list,
                         {
-                            msg: dataFromServer.text,
-                            sender: dataFromServer.sender,
+                            content: dataFromServer.text,
+                            user: dataFromServer.user,
                         },
                     ],
                 }));
             }
         };
+        this.scrollToBottom();
     };
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
     render() {
         return (
             <div id="base-layout" className='chat-layout'>
@@ -71,20 +83,24 @@ class Chat extends Component {
                             <div style={{ fontSize: '22px', fontWeight: '600' }}>{this.state.room_meta.name}</div>
                             <div style={{ fontSize: '15px' }}>{this.state.room_meta.member_count} участника</div>
                         </div>
-                        <ExitButton />
+                        <BackButton />
 
                     </Card.Header>
-                    <Card.Body className="d-flex flex-column align-items-center">
-                        {this.state.messages.map((message) => (
+                    <Card.Body className="d-flex flex-column align-items-center chat-body">
+                        {this.state.message_list.map((message) => (
                             <>
-                                <Card key={message.id}>
-                                    {message.sender.username}
-                                    {message.msg}
-                                </Card>
+                                {(message.user.id !== this.state.user.id) ? (
+                                    <MessageLeft message={message} key={message.id}/>
+                                ) : (
+                                    <MessageRight message={message} key={message.id}/>
+                                )}
                             </>
                         ))}
+                        <div style={{ float: "left", clear: "both" }}
+                            ref={(el) => { this.messagesEnd = el; }}>
+                        </div>
                     </Card.Body>
-                    <Card.Footer >
+                    <Card.Footer>
                         <form
                             className='d-flex flex-row justify-content-between align-items-center'
                             onSubmit={this.onButtonClicked}
@@ -98,7 +114,7 @@ class Chat extends Component {
                                     this.value = this.state.value;
                                 }}
                             />
-                            <button type='submit' className='btn-no-style'>
+                            <button type='submit' className='btn-no-style' style={{ fontSize: '23px' }}>
                                 <Send style={{ transform: 'rotate(45deg)', cursor: 'pointer' }} />
                             </button>
                         </form>
