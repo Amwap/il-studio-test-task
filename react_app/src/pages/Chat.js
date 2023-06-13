@@ -61,13 +61,29 @@ class Chat extends Component {
 
                     </Card.Header>
                     <Card.Body className="d-flex flex-column align-items-center">
-
+                        {this.state.messages.map((message) => (
+                            <>
+                                <Card key={message.id}>
+                                    {message.name}
+                                    {message.msg}
+                                </Card>
+                            </>
+                        ))}
                     </Card.Body>
                     <Card.Footer >
                         <form
                             className='d-flex flex-row justify-content-between align-items-center'
+                            onSubmit={this.onButtonClicked}
                         >
-                            <Form.Control placeholder="Сообщение..." name='name' style={{ border: 'white', borderRadius: '0px' }} />
+                            <Form.Control
+                                value={this.state.value}
+                                placeholder="Сообщение..."
+                                style={{ border: 'white', borderRadius: '0px' }}
+                                onChange={(e) => {
+                                    this.setState({ value: e.target.value });
+                                    this.value = this.state.value;
+                                }}
+                            />
                             <button type='submit' className='btn-no-style'>
                                 <Send style={{ transform: 'rotate(45deg)', cursor: 'pointer' }} />
                             </button>
