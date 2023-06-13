@@ -7,18 +7,26 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
+
+
 class UserView(APIView):
     permission_classes = (IsAuthenticated, )
     def get(self, request):
-        # self.request.user
-        print(self.request.user)
         data = UserSerializer(self.request.user).data
+        return Response(status=200, data=data)
+
+class RoomMetaView(APIView):
+    permission_classes = (IsAuthenticated, )
+    def get(self, request, room_id):
+        room = ChatRoom.objects.get(id=room_id)
+        data = ChatRoomSerializer(room).data
         return Response(status=200, data=data)
     
 class RoomListView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     queryset = ChatRoom.objects.all() 
     serializer_class = ChatRoomSerializer
+    
     
 class RoomCreateView(generics.CreateAPIView):
     # permission_classes = (IsAuthenticated, )

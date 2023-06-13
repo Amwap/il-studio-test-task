@@ -1,11 +1,10 @@
 import { BoxArrowInLeft } from 'react-bootstrap-icons';
+import logout from '../helpers/logout';
+
 
 function ExitButton() {
-    const onClick = (e) => {
-        console.log(e)
-    };
     return (
-        <BoxArrowInLeft onClick={onClick} style={{ cursor: 'pointer' }} />
+        <BoxArrowInLeft onClick={logout} style={{ cursor: 'pointer' }} />
     )
 }
 

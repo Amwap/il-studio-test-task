@@ -5,6 +5,8 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import ExitButton from '../components/exitButton'
 import { Send } from 'react-bootstrap-icons';
+import axios from "axios";
+
 
 class Chat extends Component {
     state = {
@@ -13,7 +15,17 @@ class Chat extends Component {
         value: '',
         sender: JSON.parse(localStorage.getItem('user')),
         room_id: this.props.match.params.room_id,
+        room_meta: {}
     }
+    // getRoomMeta = () => {
+    //     axios.get(`${process.env.REACT_APP_API_URL}/api/v1/room/meta/` + this.state.room_id + '/')
+    //         .then(response => {
+    //             console.log(response.data)
+    //             this.state.room_meta = response.data
+    //         })
+    //         .catch(err => console.log(err));
+    // }
+
     client = new W3CWebSocket('ws://127.0.0.1:8000/ws/' + this.state.room_id + '/'); //gets room_name from the state and connects to the backend server 
     onButtonClicked = (e) => {
         this.client.send(
@@ -32,7 +44,11 @@ class Chat extends Component {
         };
         this.client.onmessage = (message) => {
             const dataFromServer = JSON.parse(message.data);
-            if (dataFromServer) {
+            if (dataFromServer.type === 'page_meta') {
+                this.setState((state) => ({
+                    room_meta: dataFromServer
+                }));
+            } else if (dataFromServer.type === 'chat_message') {
                 this.setState((state) => ({
                     messages: [
                         ...state.messages,
@@ -46,15 +62,14 @@ class Chat extends Component {
         };
     };
     render() {
-        const { classes } = this.props;
         return (
             <div id="base-layout" className='chat-layout'>
                 <Card className='col-6 rounded-0'>
                     <Card.Header style={{ fontSize: "26px", backgroundColor: 'white' }} className="d-flex justify-content-between align-items-center">
                         <div></div>
                         <div className='d-flex flex-column'>
-                            <div style={{ fontSize: '22px', fontWeight: '600' }}>Название</div>
-                            <div style={{ fontSize: '15px' }}>2 участника</div>
+                            <div style={{ fontSize: '22px', fontWeight: '600' }}>{this.state.room_meta.name}</div>
+                            <div style={{ fontSize: '15px' }}>{this.state.room_meta.member_count} участника</div>
                         </div>
                         <ExitButton />
 
@@ -90,80 +105,6 @@ class Chat extends Component {
                     </Card.Footer>
                 </Card>
             </div>
-
-            // <Container component="main" maxWidth="xs">
-            //     {this.state.filledForm ? (
-            //         <div style={{ marginTop: 50 }}>
-            //             Room Name: {this.state.room_id}
-            //             <Paper
-            //                 style={{ height: 500, maxHeight: 500, overflow: "auto", boxShadow: "none", }}
-            //             >
-            //                 {this.state.messages.map((message) => (
-            //                     <>
-            //                         <Card className={classes.root}>
-            //                             <CardHeader title={message.sender.id} subheader={message.msg} />
-            //                         </Card>
-            //                     </>
-            //                 ))}
-            //             </Paper>
-            //             <form
-            //                 className={classes.form}
-            //                 noValidate
-            //                 onSubmit={this.onButtonClicked}
-            //             >
-            //                 <TextField id="outlined-helperText" label="Write text" defaultValue="Default Value"
-            //                     variant="outlined"
-            //                     value={this.state.value}
-            //                     fullWidth
-            //                     onChange={(e) => {
-            //                         this.setState({ value: e.target.value });
-            //                         this.value = this.state.value;
-            //                     }}
-            //                 />
-            //                 <Button type="submit" fullWidth variant="contained" color="primary"
-            //                     className={classes.submit}
-            //                 >
-            //                     Send Message
-            //                 </Button>
-            //             </form>
-            //         </div>
-            //     ) : (
-            //         <div>
-            //             <CssBaseline />
-            //             <div className={classes.paper}>
-            //                 <form
-            //                     className={classes.form}
-            //                     noValidate
-            //                     onSubmit={(value) => this.setState({ filledForm: true })}
-            //                 >
-            //                     <TextField variant="outlined" margin="normal" required fullWidth label="Room sender.id"
-            //                         sender.id="Room sender.id"
-            //                         autoFocus
-            //                         value={this.state.room_id}
-            //                         onChange={(e) => {
-            //                             this.setState({ room_id: e.target.value });
-            //                             this.value = this.state.room_id;
-            //                         }}
-            //                     />
-            //                     <TextField variant="outlined" margin="normal" required fullWidth sender.id="sender" label="sender"
-            //                         type="sender"
-            //                         id="sender"
-            //                         value={this.state.sender.id}
-            //                         onChange={(e) => {
-            //                             this.setState({ sender.id: e.target.value });
-            //                             this.value = this.state.sender.id;
-            //                         }}
-            //                     />
-            //                     <Button type="submit" fullWidth variant="contained" color="primary"
-            //                         className={classes.submit}
-            //                     >
-            //                         Submit
-            //                     </Button>
-            //                 </form>
-            //             </div>
-            //         </div>
-            //     )}
-            // </Container>
         );
     }
 }

@@ -3,7 +3,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from apps.chat_app.models import Message, ChatRoom
 from django.contrib.auth.models import User
-from apps.chat_app.serializers import UserSerializer
+from apps.chat_app.serializers import UserSerializer, ChatRoomSerializer
 
 
 class TextRoomConsumer(WebsocketConsumer):
@@ -20,6 +20,14 @@ class TextRoomConsumer(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
+        
+        async_to_sync(self.channel_layer.group_send)(
+            self.room_group_name,
+            {
+                'type': 'page_meta',
+                **ChatRoomSerializer(chat_room).data
+            }
+        )
         
     def disconnect(self, close_code):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
@@ -51,17 +59,13 @@ class TextRoomConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': text,
+                'text': text,
                 'sender': UserSerializer(user).data
             }
         )
 
     def chat_message(self, event):
-        text = event['message']
-        sender = event['sender']
-        user = User.objects.get(id=sender['id'])
-
-        self.send(text_data=json.dumps({
-            'text': text,
-            'sender': UserSerializer(user).data
-        }))
+        self.send(text_data=json.dumps(event))
+        
+    def page_meta(self, event):
+        self.send(text_data=json.dumps(event))

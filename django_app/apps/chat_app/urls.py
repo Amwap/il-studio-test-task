@@ -1,9 +1,11 @@
 from django.urls import path
-from apps.chat_app.views import RoomListView, RoomCreateView, UserView
+from apps.chat_app.views import RoomListView, RoomCreateView, UserView, RoomMetaView
 
 urlpatterns = [
     path('user/me/', UserView.as_view()),
-    
+
     path('chat/room/list/', RoomListView.as_view()),
     path('chat/room/create/', RoomCreateView.as_view()),
+    
+    path('room/meta/<slug:room_id>/', RoomMetaView.as_view()),
 ]

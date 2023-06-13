@@ -16,7 +16,6 @@ function login(username, password) {
             setAuthToken(access);
             axios.get(`${process.env.REACT_APP_API_URL}/api/v1/user/me/`)
                 .then(response => {
-                    console.log(response)
                     localStorage.setItem("user", JSON.stringify(response.data));
                     history.push('/chatlist')
                 })
