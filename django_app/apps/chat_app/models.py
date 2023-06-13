@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 class ChatRoom(models.Model):
     name = models.CharField(_("Название комнаты"), max_length=50)
+    member_count = models.PositiveIntegerField(_("Количество участников"), default=0)
     class Meta:
         verbose_name = _('Комната')
         verbose_name_plural = _('Список комнат')

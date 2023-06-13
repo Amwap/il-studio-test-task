@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import ExitButton from '../components/exitButton'
@@ -12,16 +11,16 @@ class Chat extends Component {
         filledForm: false,
         messages: [],
         value: '',
-        name: '',
-        room: this.props.match.params.slug,
+        sender: JSON.parse(localStorage.getItem('user')),
+        room_id: this.props.match.params.room_id,
     }
-    client = new W3CWebSocket('ws://127.0.0.1:8000/ws/' + this.state.room + '/'); //gets room_name from the state and connects to the backend server 
+    client = new W3CWebSocket('ws://127.0.0.1:8000/ws/' + this.state.room_id + '/'); //gets room_name from the state and connects to the backend server 
     onButtonClicked = (e) => {
         this.client.send(
             JSON.stringify({
                 type: "message",
                 text: this.state.value,
-                sender: this.state.name,
+                sender: this.state.sender,
             })
         );
         this.state.value = "";
@@ -39,7 +38,7 @@ class Chat extends Component {
                         ...state.messages,
                         {
                             msg: dataFromServer.text,
-                            name: dataFromServer.sender,
+                            sender: dataFromServer.sender,
                         },
                     ],
                 }));
@@ -64,7 +63,7 @@ class Chat extends Component {
                         {this.state.messages.map((message) => (
                             <>
                                 <Card key={message.id}>
-                                    {message.name}
+                                    {message.sender.username}
                                     {message.msg}
                                 </Card>
                             </>
@@ -95,14 +94,14 @@ class Chat extends Component {
             // <Container component="main" maxWidth="xs">
             //     {this.state.filledForm ? (
             //         <div style={{ marginTop: 50 }}>
-            //             Room Name: {this.state.room}
+            //             Room Name: {this.state.room_id}
             //             <Paper
             //                 style={{ height: 500, maxHeight: 500, overflow: "auto", boxShadow: "none", }}
             //             >
             //                 {this.state.messages.map((message) => (
             //                     <>
             //                         <Card className={classes.root}>
-            //                             <CardHeader title={message.name} subheader={message.msg} />
+            //                             <CardHeader title={message.sender.id} subheader={message.msg} />
             //                         </Card>
             //                     </>
             //                 ))}
@@ -137,22 +136,22 @@ class Chat extends Component {
             //                     noValidate
             //                     onSubmit={(value) => this.setState({ filledForm: true })}
             //                 >
-            //                     <TextField variant="outlined" margin="normal" required fullWidth label="Room name"
-            //                         name="Room name"
+            //                     <TextField variant="outlined" margin="normal" required fullWidth label="Room sender.id"
+            //                         sender.id="Room sender.id"
             //                         autoFocus
-            //                         value={this.state.room}
+            //                         value={this.state.room_id}
             //                         onChange={(e) => {
-            //                             this.setState({ room: e.target.value });
-            //                             this.value = this.state.room;
+            //                             this.setState({ room_id: e.target.value });
+            //                             this.value = this.state.room_id;
             //                         }}
             //                     />
-            //                     <TextField variant="outlined" margin="normal" required fullWidth name="sender" label="sender"
+            //                     <TextField variant="outlined" margin="normal" required fullWidth sender.id="sender" label="sender"
             //                         type="sender"
             //                         id="sender"
-            //                         value={this.state.name}
+            //                         value={this.state.sender.id}
             //                         onChange={(e) => {
-            //                             this.setState({ name: e.target.value });
-            //                             this.value = this.state.name;
+            //                             this.setState({ sender.id: e.target.value });
+            //                             this.value = this.state.sender.id;
             //                         }}
             //                     />
             //                     <Button type="submit" fullWidth variant="contained" color="primary"
