@@ -5,14 +5,11 @@ from apps.chat_app.models import Message, ChatRoom
 from django.contrib.auth.models import User
 from apps.chat_app.serializers import UserSerializer, ChatRoomSerializer, MessageSerializer
 
-
-class TextRoomConsumer(WebsocketConsumer):
+class ChatRoomConsumer(WebsocketConsumer):
     def connect(self):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         chat_room = ChatRoom.objects.get(id=self.room_id)
-        chat_room.member_count += 1
-        chat_room.save()
-
+        
         self.room_group_name = 'chat_%s' % self.room_id
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
@@ -26,7 +23,7 @@ class TextRoomConsumer(WebsocketConsumer):
             {
                 'type': 'room_meta',
                 'room_meta': ChatRoomSerializer(chat_room).data,
-                'message_list': MessageSerializer(message_list, many=True).data
+                'message_list': MessageSerializer(message_list[:10], many=True).data
             }
         )
         
@@ -34,10 +31,8 @@ class TextRoomConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         self.room_id = self.scope['url_route']['kwargs']['room_id']
         chat_room = ChatRoom.objects.get(id=self.room_id)
-        chat_room.member_count -= 1
-        chat_room.save()
-
-        # Leave room group
+        chat_room.members.remove()
+        
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name

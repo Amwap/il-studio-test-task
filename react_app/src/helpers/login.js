@@ -3,9 +3,13 @@ import { setAuthToken } from "../helpers/setAuthToken"
 import { history } from "./history";
 
 function login(username, password) {
+    // const loginPayload = {
+    //     username: 'admin',
+    //     password: 'admin_forever'
+    // }
     const loginPayload = {
-        username: 'admin',
-        password: 'admin_forever'
+        username: username.value,
+        password: password.value
     }
     axios.post(`${process.env.REACT_APP_API_URL}/api/v1/token/`, loginPayload)
         .then(response => {
