@@ -41,7 +41,6 @@ class Chat extends Component {
     scrollToBottom = () => {
         this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
-
     componentDidMount() {
         this.client.onopen = () => {
             console.log("WebSocket Client Connected");
@@ -78,18 +77,17 @@ class Chat extends Component {
                         <div></div>
                         <div className='d-flex flex-column'>
                             <div style={{ fontSize: '22px', fontWeight: '600' }}>{this.state.room_meta.name}</div>
-                            <div style={{ fontSize: '15px' }}>{this.state.room_meta.member_count} участника</div>
+                            <div style={{ fontSize: '15px' }}>Участника{this.state.room_meta.member_count}</div>
                         </div>
                         <BackButton />
-
                     </Card.Header>
                     <Card.Body className="d-flex flex-column align-items-center chat-body">
                         {this.state.message_list.map((message) => (
                             <>
                                 {(message.user.id !== this.state.user.id) ? (
-                                    <MessageLeft message={message} key={message.id}/>
+                                    <MessageLeft message={message} key={message.id} />
                                 ) : (
-                                    <MessageRight message={message} key={message.id}/>
+                                    <MessageRight message={message} key={message.id} />
                                 )}
                             </>
                         ))}

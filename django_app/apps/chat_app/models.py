@@ -20,6 +20,9 @@ class Message(models.Model):
     content = models.TextField(verbose_name=_("Текст сообщения"))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("Время"))
 
+    def __str__(self) -> str:
+        return self.user.username + ' ' + self.room.name
+    
     class Meta:
         ordering = ('timestamp',)
         verbose_name = _('Сообщение')
