@@ -77,7 +77,7 @@ class Chat extends Component {
                         <div></div>
                         <div className='d-flex flex-column'>
                             <div style={{ fontSize: '22px', fontWeight: '600' }}>{this.state.room_meta.name}</div>
-                            <div style={{ fontSize: '15px' }}>Участника{this.state.room_meta.member_count}</div>
+                            <div style={{ fontSize: '15px' }}>Участников: 2{this.state.room_meta.member_count}</div>
                         </div>
                         <BackButton />
                     </Card.Header>
